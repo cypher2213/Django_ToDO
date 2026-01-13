@@ -14,11 +14,30 @@ class TaskApiView(APIView):
     def post(self,request):
         serializer = TaskSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
-        new_task = Task.objects.create(
-            title = request.data['title']
-        )
+        serializer.save()
+
         return Response({
             'message':"Task created successfully",
-            'new_task': TaskSerializer(new_task).data
+            'new_task': serializer.data
         })
+        
+    def put(self,request,*args, **kwargs):
+        pk = kwargs.get('pk',None)
+        
+        if not pk:
+            return Response({'message':'Method PUT is not allowed'})
+        
+        try:
+            instance = Task.objects.get(pk=pk)
+        except:
+            return Response({'message':f'Task with id {pk} is not found'})
+        
+        serializer = TaskSerializer(data=request.data, instance = instance)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+            
+        return Response({
+            'message':'Task updated successfully',
+            'task':serializer.data
+        })
+        

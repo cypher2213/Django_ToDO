@@ -20,5 +20,6 @@ from task.views import TaskApiView
 
 urlpatterns = [
     path('admin/', admin.site.urls), 
-    path('api/v1/tasks/',TaskApiView.as_view())
+    path('api/v1/tasks/',TaskApiView.as_view()),
+    path('api/v1/task/<int:pk>/',TaskApiView.as_view())
 ]
