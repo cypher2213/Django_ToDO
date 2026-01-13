@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from .models import Task
 from rest_framework.response import Response
 from .serializers import TaskSerializer
+from rest_framework import status
 
 # Create your views here.
 class TaskApiView(APIView):
@@ -29,8 +30,8 @@ class TaskApiView(APIView):
         
         try:
             instance = Task.objects.get(pk=pk)
-        except:
-            return Response({'message':f'Task with id {pk} is not found'})
+        except Task.DoesNotExist:
+            return Response({'message':f'Task with id {pk} is not found'},status=status.HTTP_404_NOT_FOUND)
         
         serializer = TaskSerializer(data=request.data, instance = instance)
         serializer.is_valid(raise_exception=True)
@@ -40,4 +41,18 @@ class TaskApiView(APIView):
             'message':'Task updated successfully',
             'task':serializer.data
         })
+        
+    def delete(self,request,*args, **kwargs):
+        pk = kwargs.get('pk',None)
+        if not pk:
+            return Response({'message':'Method DELETE is not allowed'})
+        
+        try:
+            instance = Task.objects.get(pk=pk)
+        except Task.DoesNotExist:
+            return Response({'message':f'Task with id {pk} is not found'},status=status.HTTP_404_NOT_FOUND)
+        
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+        
         
