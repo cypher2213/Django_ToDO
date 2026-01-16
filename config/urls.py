@@ -16,10 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from task.views import TaskApiView
+from task.views import TaskViewSet
+from rest_framework import routers
+from django.urls import include
+
+router = routers.SimpleRouter()
+router.register(r'task',TaskViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls), 
-    path('api/v1/tasks/',TaskApiView.as_view()),
-    path('api/v1/task/<int:pk>/',TaskApiView.as_view())
+    path('api/v1/',include(router.urls)),
 ]
