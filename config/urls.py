@@ -16,11 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from task.views import TaskViewSet, RegisterView, LoginView
+from task.views import TaskViewSet
+from user_auth.views import  RegisterView, LoginView
 from rest_framework import routers
 from django.urls import include
 from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
 )
