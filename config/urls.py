@@ -16,9 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from task.views import TaskViewSet
+from task.views import TaskViewSet, RegisterView, LoginView
 from rest_framework import routers
 from django.urls import include
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 router = routers.SimpleRouter()
 router.register(r'task',TaskViewSet)
@@ -26,4 +31,9 @@ router.register(r'task',TaskViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls), 
     path('api/v1/',include(router.urls)),
+    # Auth
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/register/',RegisterView.as_view(),name='api_register'),
+    path('api/login/', LoginView.as_view(),name='api_login')
 ]
